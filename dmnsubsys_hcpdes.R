@@ -22,12 +22,83 @@ merged$curranxmdd=factor(merged$currmdd==TRUE & merged$curranx==TRUE)
 # merged<-merged[!merged$ID=='sub-CONN147', ] # remove potential outlier
 
 # Run Spearman partial correlations between connectivity and ruminations given age and sex
+
+# Total RRS
 corrdf<-merged[, c('Core', 'rrs_total', 'bio_sex', 'demo_age')]
 corr_core<-spcor(corrdf, method="spearman")
 corrdf<-merged[, c('DMPFC', 'rrs_total', 'bio_sex', 'demo_age')]
 corr_dmpfc<-spcor(corrdf, method="spearman")
 corrdf<-merged[, c('Core_DMPFC', 'rrs_total', 'bio_sex', 'demo_age')]
 corr_coredmpfc<-spcor(corrdf, method="spearman")
+
+# RRS reflection
+corrdf<-merged[, c('Core', 'reflection_total', 'bio_sex', 'demo_age')]
+corr_core<-spcor(corrdf, method="spearman")
+corrdf<-merged[, c('DMPFC', 'reflection_total', 'bio_sex', 'demo_age')]
+corr_dmpfc<-spcor(corrdf, method="spearman")
+corrdf<-merged[, c('Core_DMPFC', 'reflection_total', 'bio_sex', 'demo_age')]
+corr_coredmpfc<-spcor(corrdf, method="spearman")
+
+# RRS brooding
+corrdf<-merged[, c('Core', 'brooding_total', 'bio_sex', 'demo_age')]
+corr_core<-spcor(corrdf, method="spearman")
+corrdf<-merged[, c('DMPFC', 'brooding_total', 'bio_sex', 'demo_age')]
+corr_dmpfc<-spcor(corrdf, method="spearman")
+corrdf<-merged[, c('Core_DMPFC', 'brooding_total', 'bio_sex', 'demo_age')]
+corr_coredmpfc<-spcor(corrdf, method="spearman")
+
+# RRS deprelated
+corrdf<-merged[, c('Core', 'deprelated_total', 'bio_sex', 'demo_age')]
+corr_core<-spcor(corrdf, method="spearman")
+corrdf<-merged[, c('DMPFC', 'deprelated_total', 'bio_sex', 'demo_age')]
+corr_dmpfc<-spcor(corrdf, method="spearman")
+corrdf<-merged[, c('Core_DMPFC', 'deprelated_total', 'bio_sex', 'demo_age')]
+corr_coredmpfc<-spcor(corrdf, method="spearman")
+
+# Test for an interaction effect between group and total RRS 
+
+# MDD/anxiety or not
+core_inter_lm=lm(Core ~ rrs_total+curranxmdd+rrs_total*curranxmdd+bio_sex+demo_age, data=merged) 
+dmpfc_inter_lm=lm(DMPFC ~ rrs_total+curranxmdd+rrs_total*curranxmdd+bio_sex+demo_age, data=merged) 
+coredmpfc_inter_lm=lm(Core_DMPFC ~ rrs_total+curranxmdd+rrs_total*curranxmdd+bio_sex+demo_age, data=merged) 
+# current MDD or not 
+core_inter_lm=lm(Core ~ rrs_total+mini7_mdd_current+rrs_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+dmpfc_inter_lm=lm(DMPFC ~ rrs_total+mini7_mdd_current+rrs_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+coredmpfc_inter_lm=lm(Core_DMPFC ~ rrs_total+mini7_mdd_current+rrs_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+
+
+# Test for an interaction effect between group and RRS reflection 
+
+# MDD/anxiety or not
+core_inter_lm=lm(Core ~ reflection_total+curranxmdd+reflection_total*curranxmdd+bio_sex+demo_age, data=merged) 
+dmpfc_inter_lm=lm(DMPFC ~ reflection_total+curranxmdd+reflection_total*curranxmdd+bio_sex+demo_age, data=merged) 
+coredmpfc_inter_lm=lm(Core_DMPFC ~ reflection_total+curranxmdd+reflection_total*curranxmdd+bio_sex+demo_age, data=merged) 
+# current MDD or not 
+core_inter_lm=lm(Core ~ reflection_total+mini7_mdd_current+reflection_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+dmpfc_inter_lm=lm(DMPFC ~ reflection_total+mini7_mdd_current+reflection_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+coredmpfc_inter_lm=lm(Core_DMPFC ~ reflection_total+mini7_mdd_current+reflection_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+
+# Test for an interaction effect between group and RRS brooding 
+
+# MDD/anxiety or not
+core_inter_lm=lm(Core ~ brooding_total+curranxmdd+brooding_total*curranxmdd+bio_sex+demo_age, data=merged) 
+dmpfc_inter_lm=lm(DMPFC ~ brooding_total+curranxmdd+brooding_total*curranxmdd+bio_sex+demo_age, data=merged) 
+coredmpfc_inter_lm=lm(Core_DMPFC ~ brooding_total+curranxmdd+brooding_total*curranxmdd+bio_sex+demo_age, data=merged) 
+# current MDD or not 
+core_inter_lm=lm(Core ~ brooding_total+mini7_mdd_current+brooding_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+dmpfc_inter_lm=lm(DMPFC ~ brooding_total+mini7_mdd_current+brooding_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+coredmpfc_inter_lm=lm(Core_DMPFC ~ brooding_total+mini7_mdd_current+brooding_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+
+# Test for an interaction effect between group and RRS deprelated 
+
+# MDD/anxiety or not
+core_inter_lm=lm(Core ~ deprelated_total+curranxmdd+deprelated_total*curranxmdd+bio_sex+demo_age, data=merged) 
+dmpfc_inter_lm=lm(DMPFC ~ deprelated_total+curranxmdd+deprelated_total*curranxmdd+bio_sex+demo_age, data=merged) 
+coredmpfc_inter_lm=lm(Core_DMPFC ~ deprelated_total+curranxmdd+deprelated_total*curranxmdd+bio_sex+demo_age, data=merged) 
+# current MDD or not 
+core_inter_lm=lm(Core ~ deprelated_total+mini7_mdd_current+deprelated_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+dmpfc_inter_lm=lm(DMPFC ~ deprelated_total+mini7_mdd_current+deprelated_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
+coredmpfc_inter_lm=lm(Core_DMPFC ~ deprelated_total+mini7_mdd_current+deprelated_total*mini7_mdd_current+bio_sex+demo_age, data=merged) 
 
 # Regress age and sex from data at each site for each network
 merged_agesexreg<-merged
@@ -57,102 +128,80 @@ d_core_mdd<-cohensD(merged_agesexreg$Core ~ merged_agesexreg$mini7_mdd_current)
 d_dmpfc_mdd<-cohensD(merged_agesexreg$DMPFC ~ merged_agesexreg$mini7_mdd_current)
 d_coredmpfc_mdd<-cohensD(merged_agesexreg$Core_DMPFC ~ merged_agesexreg$mini7_mdd_current)
 
+# Helper function for plots
+data_summary <- function(x) {
+  m <- mean(x)
+  ymin <- m-sd(x)
+  ymax <- m+sd(x)
+  return(c(y=m,ymin=ymin,ymax=ymax))
+}
 
 # Plot connectivity difference in subnetwork between Anx+MDD and No MDD for Core
-merged_agesexreg_summary <- merged_agesexreg %>% # the names of the new data frame and the data frame to be summarised
-  group_by(curranxmdd) %>%   # the grouping variable
-  summarise(mean_PL = mean(Core, na.rm = TRUE),  # calculates the mean of each group
-            sd_PL = sd(Core, na.rm = TRUE), # calculates the standard deviation of each group
-            n_PL = n(),  # calculates the sample size per group
-            SE_PL = sd(Core, na.rm = TRUE)/sqrt(n())) # calculates the standard error of each group
-
 png('visualizations/core_anxmdd.png',width=10,height=10,units='in',res=300)
-merged_agesexreg_Plot <- ggplot(merged_agesexreg_summary, aes(curranxmdd, mean_PL)) + 
-  geom_col(fill = "grey", colour='black') +  
-  geom_errorbar(aes(ymin = mean_PL - SE_PL, ymax = mean_PL + SE_PL), width=0.2)+
-  scale_x_discrete(labels=c("No Anx or MDD","Anx or MDD"))
-merged_agesexreg_Plot + labs(y="Core functional connectivity (adjusted) ± SE", x='') + theme_bw(base_size = 26)
+ggplot(merged_agesexreg, aes(x=curranxmdd, y=Core, fill=curranxmdd)) + 
+  geom_violin() +  
+  scale_x_discrete(labels=c("No Anx or MDD","Anx or MDD")) +
+  theme_minimal(base_size=22) +
+  labs(y="Core functional connectivity (adjusted)", x='') + 
+  theme(legend.position = "none") + 
+  stat_summary(fun.data=data_summary)
 dev.off()
 
 # Plot connectivity difference in subnetwork between Anx+MDD and No MDD for DMPFC
-merged_agesexreg_summary <- merged_agesexreg %>% # the names of the new data frame and the data frame to be summarised
-  group_by(curranxmdd) %>%   # the grouping variable
-  summarise(mean_PL = mean(DMPFC, na.rm = TRUE),  # calculates the mean of each group
-            sd_PL = sd(DMPFC, na.rm = TRUE), # calculates the standard deviation of each group
-            n_PL = n(),  # calculates the sample size per group
-            SE_PL = sd(DMPFC, na.rm = TRUE)/sqrt(n())) # calculates the standard error of each group
-
 png('visualizations/dmpfc_anxmdd.png',width=10,height=10,units='in',res=300)
-merged_agesexreg_Plot <- ggplot(merged_agesexreg_summary, aes(curranxmdd, mean_PL)) + 
-  geom_col(fill = "grey", colour='black') +  
-  geom_errorbar(aes(ymin = mean_PL - SE_PL, ymax = mean_PL + SE_PL), width=0.2)+
-  scale_x_discrete(labels=c("No Anx or MDD","Anx or MDD"))
-merged_agesexreg_Plot + labs(y="DMPFC functional connectivity (adjusted) ± SE", x='') + theme_bw(base_size = 26)
+ggplot(merged_agesexreg, aes(x=curranxmdd, y=DMPFC, fill=curranxmdd)) + 
+  geom_violin() +  
+  scale_x_discrete(labels=c("No Anx or MDD","Anx or MDD")) +
+  theme_minimal(base_size=22) +
+  labs(y="DMPFC functional connectivity (adjusted)", x='') + 
+  theme(legend.position = "none") + 
+  stat_summary(fun.data=data_summary)
 dev.off()
 
 # Plot connectivity difference in subnetwork between Anx+MDD and No MDD for Core-DMPFC
-merged_agesexreg_summary <- merged_agesexreg %>% # the names of the new data frame and the data frame to be summarised
-  group_by(curranxmdd) %>%   # the grouping variable
-  summarise(mean_PL = mean(Core_DMPFC, na.rm = TRUE),  # calculates the mean of each group
-            sd_PL = sd(Core_DMPFC, na.rm = TRUE), # calculates the standard deviation of each group
-            n_PL = n(),  # calculates the sample size per group
-            SE_PL = sd(Core_DMPFC, na.rm = TRUE)/sqrt(n())) # calculates the standard error of each group
-
 png('visualizations/coredmpfc_anxmdd.png',width=10,height=10,units='in',res=300)
-merged_agesexreg_Plot <- ggplot(merged_agesexreg_summary, aes(curranxmdd, mean_PL)) + 
-  geom_col(fill = "grey", colour='black') +  
-  geom_errorbar(aes(ymin = mean_PL - SE_PL, ymax = mean_PL + SE_PL), width=0.2)+
-  scale_x_discrete(labels=c("No Anx or MDD","Anx or MDD"))
-merged_agesexreg_Plot + labs(y="Core-DMPFC functional connectivity (adjusted) ± SE", x='') + theme_bw(base_size = 26)
+ggplot(merged_agesexreg, aes(x=curranxmdd, y=Core_DMPFC, fill=curranxmdd)) + 
+  geom_violin() +  
+  scale_x_discrete(labels=c("No Anx or MDD","Anx or MDD")) +
+  theme_minimal(base_size=22) +
+  labs(y="Core-DMPFC functional connectivity (adjusted)", x='') + 
+  theme(legend.position = "none") + 
+  stat_summary(fun.data=data_summary)
 dev.off()
 
-
 # Plot connectivity difference in subnetwork between MDD and No MDD for Core
-merged_agesexreg_summary <- merged_agesexreg %>% # the names of the new data frame and the data frame to be summarised
-  group_by(mini7_mdd_current) %>%   # the grouping variable
-  summarise(mean_PL = mean(Core, na.rm = TRUE),  # calculates the mean of each group
-            sd_PL = sd(Core, na.rm = TRUE), # calculates the standard deviation of each group
-            n_PL = n(),  # calculates the sample size per group
-            SE_PL = sd(Core, na.rm = TRUE)/sqrt(n())) # calculates the standard error of each group
-
 png('visualizations/core_mdd.png',width=10,height=10,units='in',res=300)
-merged_agesexreg_Plot <- ggplot(merged_agesexreg_summary, aes(mini7_mdd_current, mean_PL)) + 
-  geom_col(fill = "grey", colour='black') +  
-  geom_errorbar(aes(ymin = mean_PL - SE_PL, ymax = mean_PL + SE_PL), width=0.2)+
-  scale_x_continuous(breaks=0:1,labels=c("No MDD","MDD"))
-merged_agesexreg_Plot + labs(y="Core functional connectivity (adjusted) ± SE", x='') + theme_bw(base_size = 22)
+ggplot(merged_agesexreg, aes(x=currmdd, y=Core, fill=currmdd)) + 
+  geom_violin() +  
+  scale_x_discrete(labels=c("No MDD","MDD")) +
+  theme_minimal(base_size=22) +
+  labs(y="Core functional connectivity (adjusted)", x='') + 
+  theme(legend.position = "none") + 
+  stat_summary(fun.data=data_summary)
 dev.off()
 
 # Plot connectivity difference in subnetwork between MDD and No MDD for DMPFC
-merged_agesexreg_summary <- merged_agesexreg %>% # the names of the new data frame and the data frame to be summarised
-  group_by(mini7_mdd_current) %>%   # the grouping variable
-  summarise(mean_PL = mean(DMPFC, na.rm = TRUE),  # calculates the mean of each group
-            sd_PL = sd(DMPFC, na.rm = TRUE), # calculates the standard deviation of each group
-            n_PL = n(),  # calculates the sample size per group
-            SE_PL = sd(DMPFC, na.rm = TRUE)/sqrt(n())) # calculates the standard error of each group
-
 png('visualizations/dmpfc_mdd.png',width=10,height=10,units='in',res=300)
-merged_agesexreg_Plot <- ggplot(merged_agesexreg_summary, aes(mini7_mdd_current, mean_PL)) + 
-  geom_col(fill = "grey", colour='black') +  
-  geom_errorbar(aes(ymin = mean_PL - SE_PL, ymax = mean_PL + SE_PL), width=0.2)+
-  scale_x_continuous(breaks=0:1,labels=c("No MDD","MDD"))
-merged_agesexreg_Plot + labs(y="DMPFC functional connectivity (adjusted) ± SE", x='') + theme_bw(base_size = 22)
+ggplot(merged_agesexreg, aes(x=currmdd, y=DMPFC, fill=currmdd)) + 
+  geom_violin() +  
+  scale_x_discrete(labels=c("No MDD","MDD")) +
+  theme_minimal(base_size=22) +
+  labs(y="DMPFC functional connectivity (adjusted)", x='') + 
+  theme(legend.position = "none") + 
+  stat_summary(fun.data=data_summary)
 dev.off()
 
 # Plot connectivity difference in subnetwork between MDD and No MDD for Core-DMPFC
-merged_agesexreg_summary <- merged_agesexreg %>% # the names of the new data frame and the data frame to be summarised
-  group_by(mini7_mdd_current) %>%   # the grouping variable
-  summarise(mean_PL = mean(Core_DMPFC, na.rm = TRUE),  # calculates the mean of each group
-            sd_PL = sd(Core_DMPFC, na.rm = TRUE), # calculates the standard deviation of each group
-            n_PL = n(),  # calculates the sample size per group
-            SE_PL = sd(Core_DMPFC, na.rm = TRUE)/sqrt(n())) # calculates the standard error of each group
-
 png('visualizations/coredmpfc_mdd.png',width=10,height=10,units='in',res=300)
-merged_agesexreg_Plot <- ggplot(merged_agesexreg_summary, aes(mini7_mdd_current, mean_PL)) + 
-  geom_col(fill = "grey", colour='black') +  
-  geom_errorbar(aes(ymin = mean_PL - SE_PL, ymax = mean_PL + SE_PL), width=0.2)+
-  scale_x_continuous(breaks=0:1,labels=c("No MDD","MDD"))
-merged_agesexreg_Plot + labs(y="Core-DMPFC functional connectivity (adjusted) ± SE", x='') + theme_bw(base_size = 22)
+ggplot(merged_agesexreg, aes(x=currmdd, y=Core_DMPFC, fill=currmdd)) + 
+  geom_violin() +  
+  scale_x_discrete(labels=c("No MDD","MDD")) +
+  theme_minimal(base_size=22) +
+  labs(y="Core-DMPFC functional connectivity (adjusted)", x='') + 
+  theme(legend.position = "none") + 
+  stat_summary(fun.data=data_summary)
 dev.off()
+
+
 
 

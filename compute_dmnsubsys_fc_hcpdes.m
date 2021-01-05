@@ -29,6 +29,7 @@ dmnidx=[coreidx dmpfcidx mtlidx];
 incomplete=zeros(length(subs), 1);
 fd_vols_all=nan(length(subs), 1);
 allmats=struct();
+allmats_nc=struct();
 
 fdthresh=0.25;
 
@@ -48,6 +49,7 @@ for sub=1:length(subs)
         incomplete(sub)=1;
         
     else
+        
         % load each run, filter and concatenate
         cif=ciftiopen(run1, 'wb_command');
         run1_data=highpass(cif.cdata', 0.01, 1/0.710);
@@ -82,6 +84,8 @@ for sub=1:length(subs)
             incomplete(sub)=1;
         else
             
+            % compute connectivity matrix with concatenated runs
+            
             % scrub if FD>fdthresh
             rest_data(rest_fd>fdthresh,:)=[];
             fd_vols_all(sub)=sum(rest_fd>fdthresh);
@@ -103,13 +107,39 @@ for sub=1:length(subs)
             core_dmpfcvec(sub)=mean(mean(atanh(corr(rest_data(:, coreidx), rest_data(:, dmpfcidx)))));
             core_mtlvec(sub)=mean(mean(atanh(corr(rest_data(:, coreidx), rest_data(:, mtlidx)))));
             dmpfc_mtlvec(sub)=mean(mean(atanh(corr(rest_data(:, dmpfcidx), rest_data(:, mtlidx)))));
+            
+            % compute alternative connectivity matrices with non-concatenated runs
+            
+            % scrub if FD>fdthresh
+            run1_data(fd1>fdthresh,:)=[];
+            run2_data(fd2>fdthresh,:)=[];
+            run3_data(fd3>fdthresh,:)=[];
+            run4_data(fd4>fdthresh,:)=[];
+            
+            % save connectivity matrix
+            allmats_nc(sub).id=subs{sub};
+            allmats_nc(sub).dmn=(atanh(corr(run1_data(:, dmnidx)))+atanh(corr(run2_data(:, dmnidx)))+atanh(corr(run3_data(:, dmnidx)))+atanh(corr(run4_data(:, dmnidx))))/4;
+            allmats_nc(sub).nfd=sum(rest_fd>fdthresh);
+            
+            % generate 4 connectivity matrices within each subsystem and average them
+            mat_core_nc=(atanh(corr(run1_data(:, coreidx)))+atanh(corr(run2_data(:, coreidx)))+atanh(corr(run3_data(:, coreidx)))+atanh(corr(run4_data(:, coreidx))))/4;
+            corevec_nc(sub)=mean(unpackconnmat(mat_core_nc));
+            mat_dmpfc_nc=(atanh(corr(run1_data(:, dmpfcidx)))+atanh(corr(run2_data(:, dmpfcidx)))+atanh(corr(run3_data(:, dmpfcidx)))+atanh(corr(run4_data(:, dmpfcidx))))/4;
+            dmpfcvec_nc(sub)=mean(unpackconnmat(mat_dmpfc_nc));
+            mat_mtl_nc=(atanh(corr(run1_data(:, mtlidx)))+atanh(corr(run2_data(:, mtlidx)))+atanh(corr(run3_data(:, mtlidx)))+atanh(corr(run4_data(:, mtlidx))))/4;
+            mtlvec_nc(sub)=mean(unpackconnmat(mat_mtl_nc));
+            
+            % generate 4 connectivity matrices between each subsystem and average them
+            core_dmpfcvec_nc(sub)=(mean(mean(atanh(corr(run1_data(:, coreidx), run1_data(:, dmpfcidx)))))+mean(mean(atanh(corr(run2_data(:, coreidx), run2_data(:, dmpfcidx)))))+mean(mean(atanh(corr(run3_data(:, coreidx), run3_data(:, dmpfcidx)))))+mean(mean(atanh(corr(run4_data(:, coreidx), run4_data(:, dmpfcidx))))))/4;
+            core_mtlvec_nc(sub)=(mean(mean(atanh(corr(run1_data(:, coreidx), run1_data(:, mtlidx)))))+mean(mean(atanh(corr(run2_data(:, coreidx), run2_data(:, mtlidx)))))+mean(mean(atanh(corr(run3_data(:, coreidx), run3_data(:, mtlidx)))))+mean(mean(atanh(corr(run4_data(:, coreidx), run4_data(:, mtlidx))))))/4;
+            dmpfc_mtlvec_nc(sub)=(mean(mean(atanh(corr(run1_data(:, dmpfcidx), run1_data(:, mtlidx)))))+mean(mean(atanh(corr(run2_data(:, dmpfcidx), run2_data(:, mtlidx)))))+mean(mean(atanh(corr(run3_data(:, dmpfcidx), run3_data(:, mtlidx)))))+mean(mean(atanh(corr(run4_data(:, dmpfcidx), run4_data(:, mtlidx))))))/4;
+
         end
     end
 end
 
 
 % create table
-
 subs(logical(incomplete))=[];
 fd_vols_all(logical(incomplete))=[];
 corevec(logical(incomplete))=[];
@@ -136,3 +166,37 @@ writetable(nwstable_hcpdes, strcat(dmnsubsys_outputdir, 'DMNsubsys_fc_hcpdes.csv
 
 % save structure
 save(strcat(matrices_outputdir, 'connmatstack_dmn_hcpdes.mat'), 'allmats');
+
+
+% export data with alternative non-concatenated values
+
+% create table
+corevec_nc(logical(incomplete))=[];
+dmpfcvec_nc(logical(incomplete))=[];
+mtlvec_nc(logical(incomplete))=[];
+core_dmpfcvec_nc(logical(incomplete))=[];
+core_mtlvec_nc(logical(incomplete))=[];
+dmpfc_mtlvec_nc(logical(incomplete))=[];
+
+allmats_nc(logical(incomplete))=[];
+
+nwstable_hcpdes_nc=table();
+nwstable_hcpdes_nc.ID = subs';
+nwstable_hcpdes_nc.fdvols = fd_vols_all;
+nwstable_hcpdes_nc = addvars(nwstable_hcpdes_nc, corevec_nc','NewVariableNames', 'Core');
+nwstable_hcpdes_nc = addvars(nwstable_hcpdes_nc, dmpfcvec_nc','NewVariableNames', 'DMPFC');
+nwstable_hcpdes_nc = addvars(nwstable_hcpdes_nc, mtlvec_nc','NewVariableNames', 'MTL');
+nwstable_hcpdes_nc = addvars(nwstable_hcpdes_nc, core_dmpfcvec_nc','NewVariableNames', 'Core_DMPFC');
+nwstable_hcpdes_nc = addvars(nwstable_hcpdes_nc, core_mtlvec_nc','NewVariableNames', 'Core_MTL');
+nwstable_hcpdes_nc = addvars(nwstable_hcpdes_nc, dmpfc_mtlvec_nc','NewVariableNames', 'DMPFC_MTL');
+
+% save table
+writetable(nwstable_hcpdes_nc, strcat(dmnsubsys_outputdir, 'DMNsubsys_fc_hcpdes_nc.csv'));
+
+% save structure
+save(strcat(matrices_outputdir, 'connmatstack_dmn_hcpdes_nc.mat'), 'allmats_nc');
+
+
+
+
+

@@ -26,8 +26,19 @@ save('dmn_connmats_hcpdes_rrs', 'matstack')
 
 % Create design matrix 
 hcpdestab(~ismember(hcpdestab.ID, finalsubslist), :)=[];
+
 desmat=hcpdestab(:, {'bio_sex','demo_age', 'rrs_total'});
-writetable(desmat, 'hcpdes_nbs_desmat.txt', 'Delimiter', '\t', 'WriteVariableNames', 0);
+writetable(desmat, 'hcpdes_nbs_rrs_total_desmat.txt', 'Delimiter', '\t', 'WriteVariableNames', 0);
+
+desmat=hcpdestab(:, {'bio_sex','demo_age', 'reflection_total'});
+writetable(desmat, 'hcpdes_nbs_rrs_reflection_desmat.txt', 'Delimiter', '\t', 'WriteVariableNames', 0);
+
+desmat=hcpdestab(:, {'bio_sex','demo_age', 'brooding_total'});
+writetable(desmat, 'hcpdes_nbs_rrs_brooding_desmat.txt', 'Delimiter', '\t', 'WriteVariableNames', 0);
+
+desmat=hcpdestab(:, {'bio_sex','demo_age', 'deprelated_total'});
+writetable(desmat, 'hcpdes_nbs_rrs_deprelated_desmat.txt', 'Delimiter', '\t', 'WriteVariableNames', 0);
+
 
 % Run NBS
 
@@ -44,9 +55,9 @@ for thresh=1:0.2:5
     UI.perms.ui='10000';
     UI.alpha.ui='0.05';
     UI.contrast.ui='[0 0 -1]';
-    UI.design.ui='hcpdes_nbs_desmat.txt';
+    UI.design.ui='hcpdes_nbs_rrs_reflection_desmat.txt';
     UI.exchange.ui='';
-    UI.matrices.ui='dmn_connmats_hcpdes_rrs.mat';
+    UI.matrices.ui='dmn_connmats_hcpdes_rrs_cn.mat';
     UI.node_coor.ui='';
     UI.node_label.ui='';
     
